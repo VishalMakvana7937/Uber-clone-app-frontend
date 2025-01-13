@@ -9,8 +9,10 @@ const Home = () => {
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
   const [panelOpen, setPanelOpen] = useState(false);
+  const vehiclePanelRef = useRef(null);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -35,6 +37,18 @@ const Home = () => {
       });
     }
   }, [panelOpen]);
+
+  useGSAP(function () {
+    if (vehiclePanel) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [vehiclePanel])
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -87,12 +101,12 @@ const Home = () => {
         </div>
 
         <div ref={panelRef} className="h-[0%] overflow-scroll bg-white p-5  transition-all duration-300">
-          <LocationSearchPanel />
+          <LocationSearchPanel vehiclePanel={vehiclePanel} setVehiclePanel={setVehiclePanel} />
         </div>
 
-        <div className='fixed bottom-0 z-10 w-full px-3 py-10 pt-12 translate-y-full bg-white'>
+        <div ref={vehiclePanelRef} className='fixed bottom-0 z-10 w-full px-3 py-10 pt-12 translate-y-full bg-white'>
           <h3 className='mb-5 text-2xl font-semibold'>Choose a Vehicle</h3>
-          <div className='flex items-center justify-between w-full p-3 mb-2 border-2 active:border-black rounded-xl'>
+          <div className='flex justify-between w-full p-3 mb-2 border-2 items-cente r active:border-black rounded-xl'>
             <img className='h-10' src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg" alt="" />
             <div className='w-1/2 ml-2'>
               <h4 className='text-base font-medium'>UberGo <span><i className="ri-user-3-fill"></i>4</span></h4>
@@ -112,7 +126,7 @@ const Home = () => {
             <h2 className='text-lg font-semibold'>193.20</h2>
           </div>
 
-          <div className='flex items-center justify-between w-full p-3 mb-2 border-2 active:border-black rounded-xl'>
+          <div ref={vehiclePanelRef} className='flex items-center justify-between w-full p-3 mb-2 border-2 active:border-black rounded-xl'>
             <img className='h-10' src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1648431773/assets/1d/db8c56-0204-4ce4-81ce-56a11a07fe98/original/Uber_Auto_558x372_pixels_Desktop.png" alt="" />
             <div className='w-1/2 ml-2'>
               <h4 className='text-base font-medium'>UberAuto <span><i className="ri-user-3-fill"></i>4</span></h4>
