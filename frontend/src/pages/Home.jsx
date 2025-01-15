@@ -6,6 +6,7 @@ import LocationSearchPanel from '../components/LocationSearchPanel';
 import VehiclePanel from '../components/VehiclePanel';
 import ConfirmRide from '../components/ConfirmRide';
 import LookingForDriver from '../components/LookingForDriver';
+import WaitingForDriver from '../components/WaitingForDriver';
 
 const Home = () => {
 
@@ -17,9 +18,12 @@ const Home = () => {
   const panelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const WatingForDriverRef = useRef(null);
+
   const [vehiclePanel, setVehiclePanel] = useState(false);
   const [confirmRidePanel, setConfirmRidePanel] = useState(false)
-  const [ vehicleFound, setVehicleFound ] = useState(false)
+  const [vehicleFound, setVehicleFound] = useState(false)
+  const [watingForDriver, setWatingForDriver] = useState(false)
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -81,6 +85,18 @@ const Home = () => {
     }
   }, [vehicleFound])
 
+  useGSAP(function () {
+    if (watingForDriver) {
+      gsap.to(WatingForDriverRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(WatingForDriverRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [watingForDriver])
+
   return (
     <div className="relative h-screen overflow-hidden">
       <img className="absolute w-16 left-5 top-5" src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
@@ -138,7 +154,11 @@ const Home = () => {
         </div>
 
         <div ref={vehicleFoundRef} className='fixed bottom-0 z-10 w-full px-3 py-6 pt-12 translate-y-full bg-white'>
-          <LookingForDriver  />
+          <LookingForDriver setVehicleFound={setVehicleFound} />
+        </div>
+
+        <div ref={WatingForDriverRef} className='fixed bottom-0 z-10 w-full px-3 py-6 pt-12 bg-white'>
+          <WaitingForDriver WaitingForDriver={WaitingForDriver} />
         </div>
 
       </div>
